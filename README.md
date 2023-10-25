@@ -1,13 +1,13 @@
 Chisel Project Template
 =======================
 
-Use this project as a starting point for your project. This project uses [playground]() as a library. `playground` and `this template` directories should be at the same level, as shown below.  
+Use this project as a starting point for your project. This project uses [playground](https://github.com/morphingmachines/playground.git) as a library. `playground` and `this template` directories should be at the same level, as shown below.  
 ```
   workspace
   |-- playground
   |-- chisel-template
 ```
-Make sure that you have a working [playground]() project before proceeding further. And donot rename/modify `playground` directory structure.
+Make sure that you have a working [playground](https://github.com/morphingmachines/playground.git) project before proceeding further. And donot rename/modify `playground` directory structure.
 
 ## A Working Chisel3 Environment
 #### Download the code
