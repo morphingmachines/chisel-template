@@ -52,7 +52,7 @@ Use `testOnly` to invoke a specific test specification from multiple test specs.
 ./mill gcd.test.testOnly gcd.GCDSpec
 ```
 
-##Chisel Learning Resources
+## Chisel Learning Resources
 
 - [Chisel Book](https://github.com/schoeberl/chisel-book)
 - [Chisel Documentation](https://www.chisel-lang.org/chisel3/)
