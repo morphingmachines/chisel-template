@@ -13,7 +13,7 @@ Make sure that you have a working [playground](https://github.com/morphingmachin
 #### Download the code
 Clone this repository into the same directory that contains `playground` and delete `.git` directory.
 ```bash
-$ git clone https://github.com/madhava-c/chisel-template.git
+$ git clone https://github.com/morphingmachines/chisel-template.git
 $ rm -rf .git
 ```
 ### Is it working ?
