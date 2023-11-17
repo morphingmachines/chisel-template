@@ -3,9 +3,9 @@
 package gcd
 
 import circt.stage.ChiselStage
+
 import java.io._
 import java.nio.file._
-
 
 trait Toplevel {
   def topclass_name = this.getClass().getName().split("\\$").last
@@ -28,9 +28,9 @@ trait Toplevel {
   */
 object gcd8 extends App with Toplevel {
 
-  val str_firrtl = ChiselStage.emitCHIRRTL(new DecoupledGcd(8), args=Array("--full-stacktrace"))
+  val str_firrtl = ChiselStage.emitCHIRRTL(new DecoupledGcd(8), args = Array("--full-stacktrace"))
   Files.createDirectories(Paths.get("generated_sv_dir"))
-  val pw         = new PrintWriter(new File(s"${generated_sv_dir}.fir"))
+  val pw = new PrintWriter(new File(s"${generated_sv_dir}.fir"))
   pw.write(str_firrtl)
   pw.close()
 
