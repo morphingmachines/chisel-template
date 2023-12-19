@@ -20,6 +20,10 @@ lint: ## Formats code using scalafmt and scalafix
 	$(MILL) $(project).fix
 	$(MILL) $(project).reformat
 
+.PHONY: lint-test
+lint-test: ## Formats code using scalafmt and scalafix
+	$(MILL) $(project).test.fix
+	$(MILL) $(project).test.reformat
 
 .PHONY: console
 console: ## Start a scala console within this project
