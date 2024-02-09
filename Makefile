@@ -29,6 +29,11 @@ lint-test: ## Formats code using scalafmt and scalafix
 console: ## Start a scala console within this project
 	$(MILL) -i $(project).console
 
+.PHONY: scaladoc
+scaladoc: ## Generates Scala API documentation that can be viewed in a browser
+	$(MILL) -i -j 0 $(project).docJar
+	@echo "Scala documentation HTML files generated in ./out/$(project)/docJar.dest/javadoc"
+
 .PHONY: clean
 clean:   ## Clean all generated files
 	$(MILL) clean
