@@ -22,9 +22,7 @@ class GCDSpec extends AnyFreeSpec with ChiselScalatestTester {
       ),
     ) { dut =>
       dut.input.initSource()
-      dut.input.setSourceClock(dut.clock)
       dut.output.initSink()
-      dut.output.setSinkClock(dut.clock)
 
       val testValues = for {
         x <- 0 to 10
