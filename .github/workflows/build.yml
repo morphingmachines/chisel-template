@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Build RTL
+
+on:
+  push:
+    branches:
+      - devSumanth
+  pull_request:
+    branches:
+      - devSumanth
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-11-jdk device-tree-compiler verilator gtkwave git make
+
+    - name: Clone playground repository
+      run: |
+        git clone https://github.com/morphingmachines/playground.git
+        cd playground
+        git submodule update --init
+
+    - name: Clone the repository
+      run: |
+        git clone git@github.com:morphingmachines/chisel-template.git
+        cd mmu
+        git submodule update --init
+
+    - name: Generate RTL
+      run: |
+        cd mmu
+        make rtl
+
+    - name: Archive RTL files
+      uses: actions/upload-artifact@v3
+      with:
+        name: rtl-files
+        path: mmu/generated_sv_dir  # Adjust the path to your RTL files
+
+    - name: Commit and push RTL files
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add mmu/generated_sv_dir  # Adjust the path to your RTL files
+        git commit -m 'Add generated RTL files'
+        git push
