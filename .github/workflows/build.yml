@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-
 name: Build RTL
 
 on:
@@ -16,10 +14,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: ./.github/actions/checkout
 
     - name: Set up Java
-      uses: actions/setup-java@v3
+      uses: ./.github/actions/setup-java
       with:
         distribution: 'adopt'
         java-version: '11'
@@ -38,24 +36,24 @@ jobs:
     - name: Clone the repository
       run: |
         git clone git@github.com:morphingmachines/chisel-template.git
-        cd mmu
+        cd chisel-template
         git submodule update --init
 
     - name: Generate RTL
       run: |
-        cd mmu
+        cd chisel-template
         make rtl
 
     - name: Archive RTL files
-      uses: actions/upload-artifact@v3
+      uses: ./.github/actions/upload-artifact
       with:
         name: rtl-files
-        path: mmu/generated_sv_dir  # Adjust the path to your RTL files
+        path: chisel-template/generated_sv_dir  # Adjust the path to your RTL files
 
     - name: Commit and push RTL files
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add mmu/generated_sv_dir  # Adjust the path to your RTL files
+        git add chisel-template/generated_sv_dir  # Adjust the path to your RTL files
         git commit -m 'Add generated RTL files'
         git push

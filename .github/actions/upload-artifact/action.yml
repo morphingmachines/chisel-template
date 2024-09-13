@@ -1,0 +1,19 @@
+name: 'Upload Artifact'
+description: 'Upload build artifacts'
+inputs:
+  name:
+    description: 'Name of the artifact'
+    required: true
+  path:
+    description: 'Path to the artifact'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        mkdir -p artifacts/${{ inputs.name }}
+        cp -r ${{ inputs.path }} artifacts/${{ inputs.name }}
+    - run: |
+        tar -czf ${{ inputs.name }}.tar.gz -C artifacts/${{ inputs.name }} .
+    - run: |
+        echo "Artifact ${{ inputs.name }} uploaded to ${{ inputs.name }}.tar.gz"
