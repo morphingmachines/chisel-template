@@ -57,3 +57,4 @@ jobs:
         git add chisel-template/generated_sv_dir  # Adjust the path to your RTL files
         git commit -m 'Add generated RTL files'
         git push
+
