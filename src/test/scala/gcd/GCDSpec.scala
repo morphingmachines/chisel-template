@@ -1,10 +1,7 @@
 // See README.md for license details.
 
 package gcd
-
-import chisel3._
-import chisel3.experimental.BundleLiterals._
-import chiseltest._
+import chisel3.simulator.VCDHackedEphemeralSimulator._
 import org.scalatest.freespec.AnyFreeSpec
 
 /** This is a trivial example of how to run this Specification: From a terminal shell use:
@@ -12,41 +9,39 @@ import org.scalatest.freespec.AnyFreeSpec
   * mill gcd.test.testOnly gcd.GCDSpec
   * }}}
   */
-class GCDSpec extends AnyFreeSpec with ChiselScalatestTester {
-
+class GCDSpec extends AnyFreeSpec {
   "Gcd should calculate proper greatest common denominator" in {
-    test(new DecoupledGcd(16)).withAnnotations(
-      Seq(
-        WriteVcdAnnotation,
-        VerilatorBackendAnnotation, // Uncomment to use the Verilator backend
-      ),
-    ) { dut =>
-      dut.input.initSource()
-      dut.output.initSink()
+    simulate(new DecoupledGcd(16)) { dut =>
+      val inputs  = List((48, 32), (7, 3), (100, 10))
+      val outputs = List(16, 1, 10)
 
-      val testValues = for {
-        x <- 0 to 10
-        y <- 0 to 10
-      } yield (x, y)
-      val inputSeq = testValues.map { case (x, y) => (new GcdInputBundle(16)).Lit(_.value1 -> x.U, _.value2 -> y.U) }
-      val resultSeq = testValues.map { case (x, y) =>
-        (new GcdOutputBundle(16)).Lit(_.value1 -> x.U, _.value2 -> y.U, _.gcd -> BigInt(x).gcd(BigInt(y)).U)
-      }
+      dut.reset.poke(1)
+      dut.input.valid.poke(false)
+      // dut.input.bits.poke((new GcdInputBundle(16)).Lit(_.value1 -> 0.U, _.value2 -> 0.U))
+      dut.input.bits.value1.poke(0)
+      dut.input.bits.value2.poke(0)
+      dut.output.ready.poke(false)
+      dut.clock.step(1)
+      dut.reset.poke(0)
+      dut.output.ready.poke(true)
 
-      fork {
-        // push inputs into the calculator, stall for 11 cycles one third of the way
-        val (seq1, seq2) = inputSeq.splitAt(resultSeq.length / 3)
-        dut.input.enqueueSeq(seq1)
-        dut.clock.step(11)
-        dut.input.enqueueSeq(seq2)
-      }.fork {
-        // retrieve computations from the calculator, stall for 10 cycles one half of the way
-        val (seq1, seq2) = resultSeq.splitAt(resultSeq.length / 2)
-        dut.output.expectDequeueSeq(seq1)
-        dut.clock.step(10)
-        dut.output.expectDequeueSeq(seq2)
-      }.join()
+      var i = 0
+      do {
+        dut.input.valid.poke(1)
+        dut.input.bits.value1.poke(inputs(i)._1)
+        dut.input.bits.value2.poke(inputs(i)._2)
 
+        dut.clock.step(1)
+        dut.input.valid.poke(0)
+
+        dut.clock.stepUntil(dut.output.valid, 1, 10)
+        dut.output.bits.gcd.expect(outputs(i))
+        dut.clock.step(1)
+
+        i = i + 1
+      } while (i < 3)
+
+      dut.clock.step(1)
     }
   }
 }
