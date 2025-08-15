@@ -56,7 +56,7 @@ Use `testOnly` to invoke a specific test specification from multiple test specs.
 
 - [Chisel Book](https://github.com/schoeberl/chisel-book)
 - [Chisel Documentation](https://www.chisel-lang.org/chisel3/)
-- [Chisel API](https://www.chisel-lang.org/api/chisel/latest/)
+- [Chisel API](https://www.chisel-lang.org/api/latest/index.html)
 
 
 
