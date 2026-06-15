@@ -51,8 +51,10 @@ class DecoupledGcd(width: Int) extends Module {
       output.bits.value1 := xInitial
       output.bits.value2 := yInitial
       resultValid        := true.B
+      printf(cf"time=${SimTime()}%d resultvalid\n")
 
       when(output.ready && resultValid) {
+        
         busy        := false.B
         resultValid := false.B
       }
