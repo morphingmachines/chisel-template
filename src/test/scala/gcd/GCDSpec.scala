@@ -2,39 +2,14 @@
 
 package gcd
 
-import _root_.svsim
-import chisel3.RawModule
-import chisel3.simulator.{PeekPokeAPI, SingleBackendSimulator}
 import org.scalatest.freespec.AnyFreeSpec
-import java.nio.file.Files
 
 /** This is a trivial example of how to run this Specification: From a terminal shell use:
   * {{{
   * mill gcd.test.testOnly gcd.GCDSpec
   * }}}
   */
-class GCDSpec extends AnyFreeSpec with PeekPokeAPI {
-
-  private lazy val verilatorWithTiming: svsim.verilator.Backend = {
-    val verilatorPath = scala.sys.process.Process(Seq("which", "verilator")).!!.trim
-    val wrapper = Files.createTempFile("verilator-timing-", ".sh")
-    wrapper.toFile.setExecutable(true)
-    Files.write(wrapper, s"#!/bin/sh\nexec $verilatorPath --timing \"$$@\"\n".getBytes)
-    new svsim.verilator.Backend(wrapper.toFile.getAbsolutePath)
-  }
-
-  private def simulate[T <: RawModule](module: => T)(body: T => Unit): Unit = {
-    val workDir = s"test_run_dir/${getClass.getSimpleName}"
-    new SingleBackendSimulator[svsim.verilator.Backend] {
-      val backend = verilatorWithTiming
-      val tag = "verilator"
-      val workspacePath = workDir
-      val commonCompilationSettings = svsim.CommonCompilationSettings()
-      val backendSpecificCompilationSettings = svsim.verilator.Backend.CompilationSettings(
-        traceStyle = Some(svsim.verilator.Backend.CompilationSettings.TraceStyle.Vcd(traceUnderscore = true))
-      )
-    }.simulate(module) { m => body(m.wrapped) }.result
-  }
+class GCDSpec extends AnyFreeSpec with emitrtl.VerilatorSimulator {
 
   "Gcd should calculate proper greatest common denominator" in {
     simulate(new DecoupledGcd(16)) { dut =>

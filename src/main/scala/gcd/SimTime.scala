@@ -13,7 +13,7 @@ private class SimTimeImpl extends BlackBox with HasBlackBoxInline {
     """|module SimTimeImpl(input logic clock, output logic [63:0] out);
        |  always @(posedge clock) out <= $time;
        |endmodule
-       |""".stripMargin
+       |""".stripMargin,
   )
 }
 
